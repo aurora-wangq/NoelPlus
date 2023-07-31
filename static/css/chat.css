@@ -1,0 +1,63 @@
+.message-container {
+    min-height: 300px;
+    margin: 5% 0 0 0;
+    border: 1px solid #cccccc;
+    border-bottom: none;
+    padding: 12px 3px 12px 3px;
+    width: 100%;
+    max-height: 512px;
+    overflow: scroll;
+}
+
+.status-indicator {
+    position: absolute;
+    right: 16px;
+    bottom: 8px;
+}
+
+.editor {
+    height: 100px;
+}
+
+.message-container:last-child {
+    min-height: 0px;
+}
+
+.message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+}
+
+.message-username {
+    font-size: 14px;
+    font-weight: 300;
+    margin: 0 12px 0 12px;
+}
+
+.notice {
+    color: gray;
+    text-align: center;
+    font-size: 12px;
+}
+
+.mention {
+    color: #00a2e8;
+    margin: 0 4px 0 4px;
+    user-select: all;
+}
+
+.mention.mention-hit {
+    color: black;
+    background-color: #99d9ea;
+    padding: 2px 4px 2px 4px;
+    border-radius: 4px;
+}
+
+.mention::before {
+    font-weight: 600;
+}
+
+.ncm-player {
+    border: none;
+}

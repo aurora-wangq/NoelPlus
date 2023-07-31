@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{{target.username}}的个人主页{% endblock %}
+
+{% block content %}
+<style>
+    html {
+        background-image: url('/media/{{ target.background_image }}');
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    body {
+        background: none;
+        margin: 10%;
+    }
+
+    .mdui-drawer {
+        backdrop-filter: blur(64px) brightness(200%);
+    }
+</style>
+
+<div class="mdui-container profile-view mdui-hoverable">
+    {% include "components/user_info.html" with user=target %}
+    {% include "components/user_detail.html" with user=target fans_count=fans_count%}
+
+    <br />
+
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6 mdui-col-offset-xs-2 mdui-typo" style="font-size: 24px;color:black">
+            {{target.description}}
+        </div>
+    </div>
+    {%if is_me == 0 %}
+    <div class="mdui-row">
+        <div class="mdui-col-xs-2 mdui-col-offset-md-10">
+            <button class="mdui-btn mdui-btn-icon btn-toggle-blur mdui-ripple" id="follow-button"
+                onclick="follow_or_not()">
+                <i class="mdui-icon material-icons" id="follow-icon">
+                    {% if following == 0 %}add{% else %}clear{% endif %}
+                </i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+<script>
+    function toggleHidden() {
+        document.querySelector('.profile-view').classList.toggle('profile-view-hidden');
+    }
+    function follow_or_not() {
+        var xhr = new XMLHttpRequest();
+        var btn = document.getElementById('follow-button');
+        var icon = document.getElementById('follow-icon');
+        btn.setAttribute('disabled', 'true');
+        xhr.open("POST", "{{target.id}}/follow");
+        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+        xhr.send();
+        if (icon.innerHTML.trim() == 'add') {
+            icon.innerHTML = 'clear';
+        }
+        else {
+            icon.innerHTML = 'add';
+        }
+        xhr.onreadystatechange = function () {
+            btn.removeAttribute('disabled');
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                mdui.snackbar(xhr.responseText);
+            }
+            else if (xhr.readyState == 4) {
+                mdui.snackbar('Failed ' + xhr.status);
+            }
+        };
+    }
+</script>
+
+<button class="mdui-btn mdui-fab mdui-fab-fixed mdui-ripple mdui-color-pink-50" onclick="toggleHidden()">
+    <i class="mdui-icon material-icons">image</i>
+</button>
+
+{% endblock %}

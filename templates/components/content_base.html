@@ -1,0 +1,34 @@
+<div class="mdui-col-sm-3 post">
+	<a href="{% url 'zone:post' post.id %}">
+		{% if post.pinned %}
+		<i class="mdui-icon fa-solid fa-thumbtack pinned-icon" style="background-color: rgba(215, 92, 153, 0);color: #90a5b5c5;"></i> 
+		{% endif %}
+		<img src="/thumbnail/{{post.images}}" class="post-image" />
+	</a>
+
+	<br />
+
+	<div class="mdui-text-truncate post-content">
+		<a href="{% url 'zone:post' post.id %}">
+			{{post.content}}
+		</a>
+	</div>
+
+	<div class="mdui-row mdui-valign">
+		<div class="mdui-col-xs-2">
+			<a href="{% url 'user:others_page' post.author.id %}">
+				<img class="post-avatar" src="/media/{{ post.author.avatar }}" />
+			</a>
+		</div>
+		<div class="mdui-col-xs-8">
+			<div class="mdui-text-truncate">
+				<a class="post-username" href="{% url 'user:others_page' post.author.id %}">
+					{{post.author.nickname}} @{{post.author.username}}
+				</a>
+			</div>
+		</div>
+		<div class="mdui-col-xs-2">
+			<div style="float:left"><i class="mdui-icon material-icons">favorite</i> {{post.likes}}</div>
+		</div>
+	</div>
+</div>
