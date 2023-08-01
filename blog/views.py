@@ -1,61 +1,67 @@
-#novel-view
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login, logout
+#blog-views
+from django import template
+from django.shortcuts import render, redirect
+from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.shortcuts import render, HttpResponse, redirect
-from user.models import *
+from datetime import datetime
 from .models import *
 
-#选择小说
-@login_required(login_url='user:login')
-def select_novel(request):
-    user = User.objects.get(username=request.user.username)     
-    novel = Novel.objects.order_by("id")
-    for i in novel:
-        i.likes = Like.objects.filter(novel=i).count()
-    context = {
-        "user": user,
-        "novel_list": novel,
-    }
-    return render(request, 'novel_fissure_traveler_select.html', context)
+class HttpResponseImATeaPot(HttpResponse):
+    status_code = 418
 
-#小说详情
+#博客选择页面
 @login_required(login_url='user:login')
-def novel(request, novel_id):
-    user = User.objects.get(username=request.user.username)
-    novel = Novel.objects.get(id = novel_id)
-    content = novel.content
-    comment_list = Comment.objects.filter(novel=novel)
-    like_list = Like.objects.filter(novel=novel)
-    liked = 0
-    for i in like_list:
-        if i.user == user:
-            liked = 1
-            break
+def index(request):
+    blogs = Blog.objects.all().order_by('-pub_time')
+    if len(blogs) > 30:
+        blogs = blogs[:30]
     context = {
-        "user": user,
-        "liked": liked,
-        "comment_list": comment_list,
+        "user": request.user,
+        "blogs": blogs
     }
-    if request.method == 'POST':
-        content = request.POST['comment_text']
-        if content:
-            new_comment = Comment.objects.create(user=user, novel=novel, content=content)
-            new_comment.save()
-        return redirect('novel:traveler_content', novel_id = novel_id)
-    else:
-        return render(request, 'novel_fissure_traveler.html', context)
+    return render(request, 'blog/index.html', context)
 
-#小说点赞
+#博客详情页
 @login_required(login_url='user:login')
-def novel_like(request, novel_id):
-    user = User.objects.get(username=request.user.username)
-    novel = Novel.objects.get(id=novel_id)
-    if request.method == 'POST':
-        if Like.objects.filter(novel=novel, user=user).count() == 0:
-            Like.objects.create(user=user, novel=novel)
-            return HttpResponse("点赞成功")
-        else:
-            Like.objects.filter(user=user, novel=novel).delete()
-            return HttpResponse("取消点赞")
+def blog(request, blog_id):
+    blog = Blog.objects.get(id=blog_id) 
+    comments = Comment.objects.filter(blog=blog)
+    context = {
+        'user': request.user,
+        'blog': blog,
+        'comments': comments,
+    }
+    return render(request, 'blog/post.html', context)
+
+#博客评论
+@login_required(login_url='user:login')
+def comment(request, blog_id):
+    print("执行了！！！")
+    if request.method == 'GET':
+        return HttpResponseImATeaPot()
+    elif request.method == 'POST':
+        Comment.objects.create(**{
+            'author': request.user,
+            'pub_time': datetime.now(),
+            'blog': Blog.objects.get(id=blog_id),
+            'content': request.POST['content'],
+            'reply': request.POST['reply']
+        }).save()
+        return redirect('blog:blog', blog_id)
+
+#写博客
+@login_required(login_url='user:login')
+def new(request):
+    if request.method == 'GET':
+        context = {
+            "user": request.user,
+        }
+        return render(request, 'blog/new.html', context)
+    elif request.method == 'POST':
+        Blog.objects.create(**{
+            'author': request.user,
+            'pub_time': datetime.now(),
+            'title': request.POST['title'],
+            'content': request.POST['content']
+        }).save()
+        return redirect('blog:index')

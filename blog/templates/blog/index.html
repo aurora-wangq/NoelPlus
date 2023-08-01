@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}博客{% endblock %}
+
+{% load markdown_extras %}
+
+{% block head %}
+<style>
+    .post-title {
+        font-size: 48px;
+        font-weight: 200;
+    }
+
+    .post-title-link {
+        text-decoration: none;
+        transition: color .2s linear;
+        color: black;
+    }
+
+    .post-title-link:hover {
+        color: skyblue;
+        transition: color .2s linear;
+    }
+
+    .post-content {
+        font-size: 32px;
+        padding-top: 12px;
+        font-weight: 300;
+    }
+
+	body {
+		background: none;
+		background-color: rgba(212, 175, 200, 0.051);
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<body>
+<a href="{% url 'blog:new' %}" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-pink-200" style="z-index: 1000;">
+    <i class="mdui-icon material-icons">add</i>
+</a>
+
+<div class="mdui-container">
+
+    {% for blog in blogs %}
+    <div class="mdui-row" style="margin-top: 32px;">
+        <div class="mdui-text-center mdui-text-truncate post-title">
+            <a class="post-title-link" href="{% url 'blog:blog' blog.id %}">
+                {{blog.title}}
+            </a>
+        </div>
+    </div>
+    <div class="mdui-row">
+        <div class="mdui-text-center post-info">
+            @{{blog.author.username}} |
+            <span title='{{ blog.pub_time|date:"c" }}'>
+                {{ blog.pub_time | date:"Y/m/d G:i" }}
+            </span>
+        </div>
+    </div>
+
+    <div class="mdui-row">
+        <div class="mdui-col-offset-md-2 mdui-col-md-8 mdui-col-xs-12 mdui-truncate">
+            {{blog.content | overview | markdown | safe}}
+        </div>
+    </div>
+
+    <div class="mdui-divider mdui-center" style="width: 65%;"></div>
+    {% endfor %}
+
+</div>
+</body>
+{% endblock %}

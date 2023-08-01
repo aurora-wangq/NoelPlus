@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}NChat{% endblock %}
+
+{% block head %}
+<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+<link href="{% static 'static/css/chat.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<input class="mdui-hidden" id="input-username" value="{{user.username}}">
+<input class="mdui-hidden" id="input-nickname" value="{{user.nickname}}">
+<input class="mdui-hidden" id="input-useravatar" value="{{user.avatar}}">
+<input class="mdui-hidden" id="input-usertitle" value="{{user.title}}">
+<input class="mdui-hidden" id="input-usertitle_level" value="{{user.title_level}}">
+<div class="mdui-container">
+
+    <div class="mdui-row">
+        <div class="mdui-col-md-10 mdui-col-offset-md-1 mdui-col-xs-12">
+            <div class="message-container mdui-container" id="message">
+                <div class="mdui-spinner status-indicator status-indicator-loading"></div>
+                <div class="status-indicator status-indicator-ready mdui-hidden">
+                    <i class="mdui-icon material-icons">check</i>
+                </div>
+                <div class="status-indicator status-indicator-fail mdui-hidden"
+                    mdui-tooltip="{content: '连接意外关闭，刷新以重试'}">
+                    <i class="mdui-icon material-icons">error</i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mdui-dialog" id="insert-ncm-dialog">
+        <div class="mdui-dialog-title">插入网易云播放器</div>
+        <div class="mdui-dialog-content">
+            <div class="mdui-container">
+                <div class="mdui-row mdui-valign">
+                    <div class="mdui-col-xs-1">
+                        <i class="mdui-icon material-icons">library_music</i>
+                    </div>
+                    <div class="mdui-col-xs-11">
+                        <div class="mdui-textfield mdui-textfield-floating-label">
+                            <label class="mdui-textfield-label">ID或链接</label>
+                            <input class="mdui-textfield-input" id="insert-ncm-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>
+                <i class="mdui-icon material-icons">close</i>
+                取消
+            </button>
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close id="insert-ncm-button">
+                <i class="mdui-icon material-icons">check</i>
+                插入
+            </button>
+        </div>
+    </div>
+
+    <div class="mdui-row">
+        <div class="mdui-col-md-10 mdui-col-offset-md-1 mdui-col-xs-12">
+            <div id="quill-toolbar">
+                <span class="ql-formats">
+                    <select class="ql-size">
+                        <option value="small">小</option>
+                        <option selected>正常</option>
+                        <option value="large">大</option>
+                        <option value="huge">巨大</option>
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-image"></button>
+                    <button class="ql-link"></button>
+                    <button class="mention-button">
+                        <i class="fa-solid fa-at"></i>
+                    </button>
+                    <button class="ncm-button" mdui-dialog="{ target: '#insert-ncm-dialog' }">
+                        <i class="fa-solid fa-music"></i>
+                    </button>
+                </span>
+            </div>
+            <div class="editor"></div>
+        </div>
+    </div>
+
+    <div class="mdui-row">
+        <div class="mdui-col-offset-md-1">
+            <label class="mdui-checkbox mdui-center">
+                <input type="checkbox" id="autoscroll-checkbox" checked />
+                <i class="mdui-checkbox-icon" style="left: 8px;"></i>
+                自动滚动
+            </label>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="mdui-row">
+        <div class="mdui-center">
+            <button class="mdui-btn mdui-ripple mdui-center" id="send-button" onclick="send()"
+                mdui-tooltip="{content: 'Ctrl+Enter也可发送', delay: 300}">
+                <i class="mdui-icon fa-solid fa-paper-plane"></i> 发送
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'static/js/chat/ql-extension.js' %}"></script>
+<script src="{% static 'static/js/chat/chat.js' %}"></script>
+{% endblock %}

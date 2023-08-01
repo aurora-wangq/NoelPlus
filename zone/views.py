@@ -9,10 +9,14 @@ import json
 import random
 from PIL import Image
 from user.models import User
+from datetime import datetime
 
 thesaurus = []
 with open('collection.json', encoding='utf8') as f:
     thesaurus = json.loads(f.read())
+
+class HttpResponseImATeaPot(HttpResponse):
+    status_code = 418
 
 #主页
 @login_required(login_url='user:login')
@@ -28,7 +32,7 @@ def home(request):
         "thesaurus": random.choice(thesaurus),
         "notice": notice,
     }
-    return render(request, 'home.html', context)
+    return render(request, 'zone/home.html', context)
 
 #编辑帖子
 @login_required(login_url='user:login')
@@ -53,7 +57,6 @@ def edit_post(request):
 def post(request, post_id):
     user = User.objects.get(username=request.user.username)
     post = Post.objects.get(id=post_id)
-    content = post.content
     comment_list = Comment.objects.filter(post=post)
     like_list = Like.objects.filter(post=post)
     liked = 0
@@ -66,16 +69,23 @@ def post(request, post_id):
         "liked": liked,
         "post": post,
         "comment_list": comment_list,
-        "content": content,
     }
-    if request.method == 'POST':
-        content = request.POST['comment_text']
-        if content:
-            new_comment = Comment.objects.create(user=user, post=post, content=content)
-            new_comment.save()
-        return redirect('zone:post', post_id=post_id)
-    else:
-        return render(request, 'article_detail.html', context)
+    return render(request, 'zone/article_detail.html', context)
+
+#帖子评论    
+@login_required(login_url='user:login')
+def comment(request, post_id):
+    if request.method == 'GET':
+        return HttpResponseImATeaPot()
+    elif request.method == 'POST':
+        Comment.objects.create(**{
+            'author': request.user,
+            'pub_time': datetime.now(),
+            'post': Post.objects.get(id=post_id),
+            'content': request.POST['content'],
+            'reply': request.POST['reply']
+        }).save()
+        return redirect('zone:post', post_id)
 
 #帖子点赞
 @login_required(login_url='user:login')

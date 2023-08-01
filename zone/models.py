@@ -9,11 +9,13 @@ class Post(models.Model):
     pinned = models.BooleanField('是否顶置', default=False)
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='所属文章')
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='点赞者')
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='点赞者', related_name='帖子点赞者')
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='所属文章')
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='评论者')
+    author = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='评论者', related_name='帖子评论者')
     content = models.CharField('评论内容', max_length=1000)
+    pub_time = models.DateTimeField('发布时间')
+    reply = models.IntegerField('Reply index', default=-1)
 class Notice(models.Model):
     creater = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='公告发布者')
     notice = models.TextField('公告内容', max_length=300)

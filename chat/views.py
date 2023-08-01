@@ -9,4 +9,4 @@ def chat(request):
     context = {
         "user": user
     }
-    return render(request, 'chat.html', context)
+    return render(request, 'chat/chat.html', context)

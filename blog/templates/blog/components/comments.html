@@ -1,0 +1,61 @@
+<div class="mdui-row mdui-valign" style="margin: 32px 0 32px 0;">
+    <div class="mdui-col-md-7 mdui-col-xs-11 mdui-col-offset-md-2">
+        <form action="{% url 'blog:comment' blog.id %}" method="post">
+            {% csrf_token %}
+            <input class="mdui-hidden" id="input-reply" name="reply" value="-1">
+            <div class="mdui-textfield">
+                <textarea class="mdui-textfield-input" id="input-comment" name="content"
+                    placeholder="说点难听的~"></textarea>
+            </div>
+        </form>
+    </div>
+    <div calss="mdui-col-xs-1">
+        <button class="mdui-btn mdui-center" id="comment-submit">评论</button>
+    </div>
+</div>
+
+{% for comment in comments %}
+<div class="comment" comment-reply="{{comment.reply}}" comment-index="{{forloop.counter}}">
+    <div class="mdui-row">
+        <div class="mdui-col-offset-md-2 mdui-col-md-1 mdui-col-xs-2">
+            <a href="{% url 'user:others_page' comment.author.id %}">
+                <img src="{{ comment.author.avatar.url }}" class="avatar" />
+            </a>
+        </div>
+        <div class="mdui-col-md-7 mdui-col-xs-10 mdui-container">
+            <div class="mdui-row">
+                <span class="comment-nicnkname mdui-hidden-md-down">{{comment.author.nickname}}</span>
+                <span class="comment-username">@{{comment.author.username}}</span>
+                <span class="user-title user-title-style-{{comment.author.title_style}}">{{comment.author.title}}</span>
+            </div>
+            <div class="mdui-row">
+                <p class="comment-content">{{comment.content}}</p>
+                <span class="comment-pubtime" title='{{comment.pub_time|date:"c"}}'>{{comment.pub_time|date:"Y/m/d G:i"}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="reply" style="padding-left: 5%"></div>
+</div>
+{% endfor %}
+
+<script>
+    $('#comment-submit').click(e => {
+        if ($('#input-comment').val().trim().length == 0) {
+            mdui.snackbar('评论不能为空');
+        }
+        else {
+            $('form').submit();
+        }
+    });
+    $('.comment-content').dblclick(e => {
+        var idx = $(e.target).parents('.comment').first().attr('comment-index');
+        var rep = $(e.target).parents('.comment').first().find('.comment-username').first().text();
+        $('#input-reply').val(idx);
+        $('#input-comment').attr('placeholder', `回复 ${rep}...`);
+    });
+    $(function () {
+        $('.comment').filter(x => $(x).attr('comment-reply') != -1).each((i, elem) => {
+            $(elem).appendTo(`.comment[comment-index="${$(elem).attr('comment-reply')}"] > .reply`);
+        })
+    });
+</script>

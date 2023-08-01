@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% load markdown_extras %}
+
+{% block title %}博客详情{% endblock %}
+
+{% block content %}
+
+<style>
+    .post-title {
+        font-size: 48px;
+        font-weight: 200;
+    }
+    .post-content {
+        font-size: 32px;
+        padding-top: 12px;
+        font-weight: 300;
+    }
+
+    .nickname,
+    .username,
+    .user-title {
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+
+    .comment-username {
+        font-weight: 300;
+        font-size: 16px;
+    }
+
+    .comment-content {
+        margin: 0 0 0 0;
+        font-size: 18px;
+    }
+
+	body {
+		background: none;
+		background-color: rgba(212, 175, 200, 0.051);
+	}
+</style>
+<body>
+<br />
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="{% static 'static/css/default.css' %}" />
+
+<div class="mdui-container" style="padding-top: 32px;">
+    <div class="mdui-row">
+        <div class="mdui-text-center post-title">
+            {{blog.title}}
+        </div>
+    </div>
+    <div class="mdui-row">
+        <div class="mdui-text-center post-info">
+            @{{blog.author.username}} |
+            <span title='{{ post.pub_time|date:"c" }}'>
+                {{ blog.pub_time | date:"Y/m/d G:i" }}
+            </span>
+        </div>
+    </div>
+
+    <div class="mdui-row">
+        <div class="mdui-col-offset-md-2 mdui-col-md-8 mdui-col-xs-12">
+            {{ blog.content | markdown | safe }}
+        </div>
+    </div>
+</div>
+
+<div class="mdui-container">
+    {% comment %} <div class="mdui-row">
+        <div class="mdui-col-xs-1 mdui-col-offset-xs-10">
+            <button class="mdui-btn mdui-btn-icon btn-toggle-blur mdui-ripple" id="like-button" onclick="like_or_not()">
+                <i class="mdui-icon material-icons" id="like-icon">favorite{% if liked == 0 %}_border{% endif %}</i>
+            </button>
+        </div>
+    </div> {% endcomment %}
+    {% include "blog/components/comments.html" with comments=comments blog=blog%}
+</div>
+</body>
+{% endblock %}

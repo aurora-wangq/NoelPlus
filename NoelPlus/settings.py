@@ -38,11 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'daphne',
+    'fontawesomefree',
     'django.contrib.staticfiles',
     'user.apps.UserConfig',
     'zone.apps.ZoneConfig',
     'chat.apps.ChatConfig',
-   # 'novel.apps.NovelConfig',
+    'blog.apps.BlogConfig',
     'channels',
 ]
 
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'NoelPlus.middleware.BlacklistMiddleware',
 ]
 
 ROOT_URLCONF = 'NoelPlus.urls'
@@ -134,7 +136,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = [
+    ('static', os.path.join(BASE_DIR, 'static')),
+    ('node_modules', os.path.join(BASE_DIR, 'node_modules/')),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
