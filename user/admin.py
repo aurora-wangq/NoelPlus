@@ -14,6 +14,7 @@ class CustomUserAdmin(UserAdmin):
                     'background_image',
                     'avatar',
                     'title',
+                    'title_level',
                 ),
             },
         ),

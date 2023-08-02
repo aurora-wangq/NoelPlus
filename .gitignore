@@ -148,3 +148,4 @@ media/*
 thumbnail/*
 .idea/
 .history/
+.node_modules/
