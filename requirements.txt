@@ -1,0 +1,11 @@
+fontawesomefree==6.4.0
+django-ckeditor
+channels
+daphne
+Pygments
+markdown
+django-mdeditor
+django
+pymysql
+Pillow
+pymdown-extensions

@@ -92,10 +92,10 @@ ASGI_APPLICATION = 'NoelPlus.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 配置数据库类型
-        'NAME': 'noelplus1',  # 数据库名字
+        'NAME': 'noelplus',  # 数据库名字
         'USER': 'root',  # 数据库用户
-        'PASSWORD': '1937782304wqj',  # 数据库密码
-        'HOST': '127.0.0.1',  # 数据库地址
+        'PASSWORD': 'MyNewPass4!',  # 数据库密码
+        'HOST': '43.138.26.229',  # 数据库地址
         'PORT': '3306',  # 数据库端口
         'OPTIONS': {'charset': 'utf8mb4'},
     }
