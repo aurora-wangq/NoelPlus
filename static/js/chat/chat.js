@@ -130,7 +130,7 @@ class Message {
         }
         if (sender.title) {
             var title = document.createElement('span');
-            title.classList.add('user-title', 'user-title-level-' + sender.title_level);
+            title.classList.add('user-title', 'user-title-style-' + sender.title_style);
             title.innerText = sender.title;
             col.appendChild(title);
         }
@@ -221,7 +221,7 @@ class Sender {
     #nickname = document.getElementById('input-nickname').value;
     #avatar = document.getElementById('input-useravatar').value;
     #title = document.getElementById('input-usertitle').value;
-    #title_level = document.getElementById('input-usertitle_level').value;
+    #title_style = document.getElementById('input-usertitle_style').value;
 
     constructor() { }
 
@@ -231,7 +231,7 @@ class Sender {
             nickname: this.#nickname,
             avatar: this.#avatar,
             title: this.#title,
-            title_level: this.#title_level
+            title_style: this.#title_style
         }
     }
 }

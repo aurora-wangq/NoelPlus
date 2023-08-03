@@ -1,28 +1,49 @@
 
 /* site owner */
-.user-title-level-1 {
+.user-title-style-owner {
     background-color: gold;
     
 }
 
 /* site administrator */
-.user-title-level-2 {
+.user-title-style-admin {
     background-color: purple;
     color: white;
 }
 
 /* special user */
-.user-title-level-3 {
+.user-title-style-sp {
     background-color: darkred;
     color: white;
 }
 
-.user-title-level-4 {
+.user-title-style-normal {
     background-color: black;
     color: white;
 }
 
+.user-title-style-movetoex {
+    display: inline-block;
+    background-color: skyblue;
+    color: black;
+    font-weight: 300;
+    padding: 4px 2px 4px 2px;
+    border-radius: 4px;
+    animation: title-rotation 2s infinite cubic-bezier(1, 0, 0, 1);
+}
+
+@keyframes title-rotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}
+
 .user-title {
+    display: inline-block;
     text-align: center;
     font-weight: bold;
     padding: 4px 12px 4px 12px;

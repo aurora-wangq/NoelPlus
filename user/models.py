@@ -21,7 +21,8 @@ class User(AbstractUser):
     background_image = models.ImageField('背景图片', upload_to=Rename('media/user/userpage_background'), default='/media/user/userpage_background/backimg.jpg')
     avatar = models.ImageField('头像', upload_to=Rename('media/user/avatar'), default='/media/user/avatar/txdefault.jpg')
     title = models.CharField('头衔', max_length=50, default='普通网友')
-    title_level = models.IntegerField('头衔类别,1站主,2管理员,3特殊,4普通', default=4)
+    title_style = models.CharField('头衔样式', default='normal', max_length=32)
+    
 class Follow(models.Model):
     up = models.ForeignKey(User, on_delete=models.CASCADE, related_name="博主")
     fan = models.ForeignKey(User, on_delete=models.CASCADE, related_name="粉丝")

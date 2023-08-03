@@ -5,7 +5,7 @@
 {% block content %}
 <style>
 	html {
-		background-image: url('/media/{{ user.background_image}}');
+		background-image: url('{{ user.background_image.url }}');
 		height: 100%;
 		background-position: center;
 		background-repeat: no-repeat;
@@ -33,7 +33,7 @@
 	</div>
 
 	<div class="mdui-container">
-		<form action="{% url 'user:edit_profile' %}" method="post" enctype="multipart/form-data" class="mdui-center">
+		<form action="{% url 'user:edit' %}" method="post" enctype="multipart/form-data" class="mdui-center">
 			{% csrf_token %}
 			<div class="mdui-row mdui-valign">
 				<div class="mdui-col-xs-1 mdui-col-offset-xs-2">

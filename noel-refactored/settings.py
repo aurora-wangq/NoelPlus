@@ -125,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -137,7 +137,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    ('static', os.path.join(BASE_DIR, 'static')),
+    os.path.join(BASE_DIR, 'static'),
     ('node_modules', os.path.join(BASE_DIR, 'node_modules/')),
 ]
 
@@ -161,5 +161,3 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     }
 }
-
-TIME_ZONE = 'Asia/Shanghai'

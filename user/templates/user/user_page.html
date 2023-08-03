@@ -6,7 +6,7 @@
 {% block content %}
 <style>
     html {
-        background-image: url('/media/{{ user.background_image }}');
+        background-image: url('{{ user.background_image.url }}');
         height: 100%;
         background-position: center;
         background-repeat: no-repeat;
@@ -41,7 +41,7 @@
 
     <div class="mdui-row">
         <div class="mdui-col-xs-2 mdui-col-offset-md-10">
-            <a href="/user/edit_profile/" class="mdui-btn mdui-ripple">编辑信息</a>
+            <a href="{% url 'user:edit' %}" class="mdui-btn mdui-ripple">编辑信息</a>
         </div>
     </div>
 </div>

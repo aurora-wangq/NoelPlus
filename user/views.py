@@ -48,7 +48,7 @@ def logout_(request):
 
 #编辑个人信息
 @login_required(login_url='user:login')
-def edit_profile(request):
+def edit(request):
     user = User.objects.get(username=request.user.username)
     fans = Follow.objects.filter(up=user)
     context = {
@@ -67,13 +67,13 @@ def edit_profile(request):
         if request.FILES.get('backimg'):
             user.background_image = request.FILES.get('backimg')
         user.save()
-        return redirect('user:user_page')
+        return redirect('user:my')
     else:
         return render(request, 'user/edit_user.html', context)
 
 #个人主页
 @login_required(login_url='user:login')
-def user_page(request):
+def my(request):
     user = User.objects.get(username=request.user.username)
     fans = Follow.objects.filter(up=user)
     context = {
@@ -84,7 +84,7 @@ def user_page(request):
 
 #他人主页
 @login_required(login_url='user:login')
-def others_page(request, target_id):
+def user(request, target_id):
     user = User.objects.get(username=request.user.username)
     target = User.objects.get(id=target_id)
     fans_list = Follow.objects.filter(up=target_id)

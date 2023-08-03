@@ -16,13 +16,13 @@
 
 	<div class="mdui-row mdui-valign">
 		<div class="mdui-col-xs-2">
-			<a href="{% url 'user:others_page' post.author.id %}">
+			<a href="{% url 'user:user' post.author.id %}">
 				<img class="post-avatar" src="/media/{{ post.author.avatar }}" />
 			</a>
 		</div>
 		<div class="mdui-col-xs-8">
 			<div class="mdui-text-truncate">
-				<a class="post-username" href="{% url 'user:others_page' post.author.id %}">
+				<a class="post-username" href="{% url 'user:user' post.author.id %}">
 					{{post.author.nickname}} @{{post.author.username}}
 				</a>
 			</div>
