@@ -12,7 +12,7 @@ class HttpResponseImATeaPot(HttpResponse):
 #博客选择页面
 @login_required(login_url='user:login')
 def index(request):
-    blogs = Blog.objects.all().order_by('-pub_time')
+    blogs = Blog.objects.all().order_by('-pinned','-pub_time')
     if len(blogs) > 30:
         blogs = blogs[:30]
     context = {
