@@ -69,7 +69,7 @@ def edit(request):
         user.save()
         return redirect('user:my')
     else:
-        return render(request, 'user/edit_user.html', context)
+        return render(request, 'user/edit.html', context)
 
 #个人主页
 @login_required(login_url='user:login')
@@ -80,7 +80,7 @@ def my(request):
         "user": user,
         "fans_count": fans.count(),
     }
-    return render(request, 'user/user_page.html', context)
+    return render(request, 'user/my.html', context)
 
 #他人主页
 @login_required(login_url='user:login')
@@ -96,7 +96,7 @@ def user(request, target_id):
         "is_me": target_id == user.id,
         "fans_count": fans_list.count(),
     }
-    return render(request, 'user/others_page.html', context)
+    return render(request, 'user/user.html', context)
 
 #关注功能
 @login_required(login_url='user:login')
