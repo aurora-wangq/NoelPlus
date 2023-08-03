@@ -1,8 +1,7 @@
-
 /* site owner */
 .user-title-style-owner {
     background-color: gold;
-    
+
 }
 
 /* site administrator */
@@ -28,8 +27,56 @@
     color: black;
     font-weight: 300;
     padding: 4px 2px 4px 2px;
+    box-shadow: 5px 2px 2px gray;
     border-radius: 4px;
-    animation: title-rotation 2s infinite cubic-bezier(1, 0, 0, 1);
+    animation:  floating 2s alternate infinite ease-in-out;
+}
+
+@keyframes floating {
+    from {
+        transform: translatey(-5px);
+    }
+    to {
+        transform: translatey(5px);
+    }
+}
+
+@keyframes colorful-background {
+    from {
+        background-color: white;
+    }
+
+    12.5% {
+        background-color: red;
+    }
+
+    25% {
+        background-color: orange;
+    }
+
+    37.5% {
+        background-color: yellow;
+    }
+
+    50% {
+        background-color: green;
+    }
+
+    62.5% {
+        background-color: cyan;
+    }
+
+    75% {
+        background-color: blue;
+    }
+
+    87.5% {
+        background-color: purple;
+    }
+
+    to {
+        background-color: white;
+    }
 }
 
 @keyframes title-rotation {
