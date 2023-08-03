@@ -21,8 +21,6 @@
 
 <form class="mdui-hidden" method="post" action="{% url 'blog:edit' blog.id %}">
     {% csrf_token %}
-    <input name="title" id="title-input">
-    <input name="tags" id="tags-input">
     <textarea name="content" id="content-input"></textarea>
 </form>
 

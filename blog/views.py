@@ -111,7 +111,6 @@ def new(request):
         Blog.objects.create(**{
             'author': request.user,
             'pub_time': datetime.now(),
-            'title': request.POST['title'],
             'content': request.POST['content']
         }).save()
         return redirect('blog:index')
