@@ -1,5 +1,5 @@
 """
-ASGI config for NoelPlus project.
+ASGI config for noel-refactored project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -12,7 +12,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from . import routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NoelPlus.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'noel-refactored.settings')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
