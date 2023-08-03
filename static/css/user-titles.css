@@ -29,7 +29,7 @@
     padding: 4px 2px 4px 2px;
     box-shadow: 5px 2px 2px gray;
     border-radius: 4px;
-    animation:  floating 2s alternate infinite ease-in-out;
+    animation: rotation 2s alternate infinite ease-in-out;
 }
 
 @keyframes floating {
@@ -79,7 +79,7 @@
     }
 }
 
-@keyframes title-rotation {
+@keyframes rotation {
     from {
         transform: rotate(0deg);
     }
