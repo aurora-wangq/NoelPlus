@@ -29,6 +29,21 @@
         display: block;
         padding: 5%;
     }
+
+    .footer {
+        padding: 24px 0 24px 0;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        transition: background-color .1s linear;
+    }
+
+    .footer:hover {
+        transition: background-color .1s linear;
+        background-color: white;
+    }
 </style>
 <div class="mdui-container login-view">
     <div class="mdui-row">
@@ -63,7 +78,7 @@
     </div>
 </div>
 
-<div style="text-align: center;">
+<div class="mdui-text-center footer">
     <footer>
         ©2023 鲁ICP备2023023515号-1
     </footer>
