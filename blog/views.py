@@ -65,3 +65,18 @@ def new(request):
             'content': request.POST['content']
         }).save()
         return redirect('blog:index')
+
+#修改博客
+def change(request, blog_id):
+    blog = Blog.objects.get(id=blog_id)
+    if request.method == 'GET':
+        context = {
+            "origin": blog.content,
+        }
+        return render(request, 'blog/change.html', context)
+    elif request.method == 'POST':
+        blog.content = request.POST['content']
+        blog.title = request.POST['title']
+        blog.save()
+        return redirect('blog:blog', blog_id)
+    

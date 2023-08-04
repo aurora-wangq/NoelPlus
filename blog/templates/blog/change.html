@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}修改博客{% endblock %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<style>
+	body {
+		background: none;
+		background-color: rgba(212, 175, 200, 0.051);
+	}
+</style>
+<body>
+<div class="mdui-container" style="margin-top: 16px;">
+    <div id="editor" style="width: 100%; height: 600px">
+    </div>
+
+    <div class="mdui-row">
+        <button class="mdui-btn mdui-center" id="submit-button">
+            <i class="mdui-icon material-icons">check</i>
+            发布
+        </button>
+    </div>
+</div>
+<form class="mdui-hidden" method="post" action="{% url 'blog:change' %}">
+    {% csrf_token %}
+    <input name="title" id="title-input">
+    <input name="tags" id="tags-input">
+    <textarea name="content" id="content-input"></textarea>
+</form>
+<script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+<script src="{% static 'node_modules/monaco-editor/min/vs/loader.js' %}"></script>
+<script>
+    let editor;
+    $(function () {
+        require.config({
+            paths: {
+                "vs": '{% static "node_modules/monaco-editor/min/vs" %}'
+            }
+        });
+        value = `{\n\t"title": "",\n\t"tags": []\n}\n---\n\n[[readmore_anchor]]\n`;
+        require(['vs/editor/editor.main'], function () {
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                value: value,
+                language: 'markdown'
+            });
+        });
+        $('#submit-button').click(e => {
+            var raw = editor.getValue().split('---');
+            var metadata = JSON.parse(raw[0]);
+            var content = raw[1];
+            $('#title-input').val(metadata.title);
+            $('#tags-input').val(JSON.stringify(metadata.tags));
+            $('#content-input').val(content);
+            $('form').submit();
+        });
+    });
+</script>
+</body>
+{% endblock %}
