@@ -9,7 +9,7 @@ var quill = new Quill('.editor', {
 });
 
 
-document.querySelector('.mention-button').addEventListener('click', e => {
+$('.mention-button').click(e => {
     let value = prompt('输入要提及的用户名');
     let index = 0;
 
@@ -30,8 +30,8 @@ document.querySelector('.mention-button').addEventListener('click', e => {
     quill.setSelection(index + 1, 0);
 });
 
-document.getElementById('insert-ncm-button').addEventListener('click', e => {
-    let s = document.getElementById('insert-ncm-input').value;
+$('#insert-ncm-button').click(e => {
+    let s = $('#insert-ncm-input').val();
     let value, index;
 
     if (s == '') {
@@ -84,26 +84,17 @@ function validateImage(src) {
 
 class Message {
     constructor() {
-        this.messageContainer = document.createElement('div');
-        this.messageContainer.classList.add('mdui-row', 'message-content', 'mdui-col-offset-xs-1');
-        this.headerContainer = document.createElement('div');
-        this.headerContainer.classList.add('mdui-row', 'message-header');
-    }
-
-    static col(element, ...column) {
-        var div = document.createElement('div');
-        div.classList.add(...column.map(x => 'mdui-col-' + x));
-        div.appendChild(element);
-        return div;
+        this.messageContainer = $('<div class="mdui-row message-content mdui-col-offset-xs-1" />');
+        this.headerContainer = $('<div class="mdui-row message-header" />');
     }
 
     setSender(sender) {
         if (sender.avatar) {
-            var avatar = document.createElement('img');
-            avatar.classList.add('message-avatar', 'mdui-center');
-            avatar.setAttribute('source-user', sender.username);
-            avatar.src = '/media/' + sender.avatar;
-            avatar.addEventListener('dblclick', e => {
+            $(`<img></img>`, {
+                "class": "message-avatar",
+                "source-user": sender.username,
+                "src": sender.avatar
+            }).dblclick(e => {
                 let sel = quill.getSelection();
                 if (sel) {
                     quill.updateContents(new Delta().retain(sel.index).insert({
@@ -117,85 +108,54 @@ class Message {
                     }), 'user');
                     quill.setSelection(quill.getLength() - 1);
                 }
-            });
-            this.headerContainer.appendChild(Message.col(avatar, 'md-1', 'xs-2'));
+            }).appendTo(this.headerContainer)
+                .wrap($('<div class="mdui-col-md-1 mdui-col-xs-2"></div>'));
         }
-        var col = document.createElement('div');
-        col.classList.add('mdui-col-md-11', 'mdui-col-xs-10', 'mdui-valign');
+        let col = $('<div class="mdui-col-md-11 mdui-col-xs-10 mdui-valign" />');
+        if (sender.nickname) {
+            $('<span class="message-nickname" />').text(sender.nickname).appendTo(col);
+        }
         if (sender.username) {
-            var username = document.createElement('span');
-            username.innerText = '@' + sender.username;
-            username.classList.add('message-username');
-            col.appendChild(username);
+            $('<span class="message-username" />').text('@' + sender.username).appendTo(col);
         }
         if (sender.title) {
-            var title = document.createElement('span');
-            title.classList.add('user-title', 'user-title-style-' + sender.title_style);
-            title.innerText = sender.title;
-            col.appendChild(title);
+            $(`<span class="user-title user-title-style-${sender.title_style}" />`).text(sender.title).appendTo(col);
         }
-        this.headerContainer.appendChild(col);
+        col.appendTo(this.headerContainer);
     }
 
     appendText(text, attr) {
-        var tag = document.createElement('span');
-        tag.innerText = text;
+        let q = $('<span />').text(text).appendTo(this.messageContainer);
         if (attr) {
-            var createParent = (tag, child, ...attributes) => {
-                var parent = document.createElement(tag);
-                parent.appendChild(child);
-                for (var name in attributes) {
-                    parent.setAttribute(name, attributes[name]);
-                }
-                return parent;
-            }
-            if (attr.bold) {
-                tag = createParent('b', tag);
-            }
-            if (attr.underline) {
-                tag = createParent('u', tag);
-            }
-            if (attr.italic) {
-                tag = createParent('i', tag);
-            }
-            if (attr.link) {
-                tag = createParent('a', tag, { 'href': attr.link });
-            }
-            if (attr.strike) {
-                tag = createParent('s', tag);
-            }
-            if (attr.size) {
-                tag.style.fontSize = font_sizes[attr.size];
-            }
+            if (attr.bold) q.wrap('<b />');
+            if (attr.underline) q.wrap('<u />');
+            if (attr.italic) q.wrap('<i />');
+            if (attr.link) q.wrap(`<a href="${attr.link}" />`);
+            if (attr.strike) q.wrap('<s />');
+            if (attr.size) q.css('font-size', font_sizes[attr.size]);
         }
-        this.messageContainer.appendChild(tag);
     }
 
     appendMention(text) {
-        var span = document.createElement('span');
-        span.classList.add('mention');
-        if (text == sender.data.username) {
-            span.classList.add('mention-hit');
-        }
-        span.innerText = '@' + text;
-        this.messageContainer.appendChild(span);
+        $(`<span class="mention">@${text}</span>`)
+            .appendTo(this.messageContainer)
+            .filter(x => text == sender.data.username)
+            .addClass('mention-hit');
     }
 
     appendImage(src) {
-        var img = document.createElement('img');
-        img.setAttribute('src', src);
-        this.messageContainer.appendChild(img);
+        $(`<img src="${src}" />`).appendTo(this.messageContainer);
     }
 
     appendNCM(id) {
-        var iframe = document.createElement('iframe');
-        iframe.classList.add('ncm-player');
-        iframe.setAttribute('width', '330');
-        iframe.setAttribute('height', '86');
-        iframe.setAttribute('marginwidth', '0');
-        iframe.setAttribute('marginheight', '0');
-        iframe.src = `//music.163.com/outchain/player?type=2&id=${id}&auto=0&height=66`;
-        this.messageContainer.appendChild(iframe);
+        $('<iframe />', {
+            "class": "ncm-player",
+            "src": `//music.163.com/outchain/player?type=2&id=${id}&auto=0&height=66`,
+            'width': '330',
+            'height': '86',
+            'marginwidth': '0',
+            'marginheight': '0'
+        }).appendTo(this.messageContainer);
     }
 
     get empty() {
@@ -203,16 +163,15 @@ class Message {
     }
 
     get container() {
-        if (this.messageContainer.children.length == 0) {
+        if (this.messageContainer.children().length == 0) {
             return null;
         }
-        var container = document.createElement('div');
-        container.classList.add('mdui-container', 'message');
-        if (this.headerContainer.children.length) {
-            container.appendChild(this.headerContainer);
+        let q = $('<div class="mdui-container message" />');
+        if (this.headerContainer.children().length) {
+            this.headerContainer.appendTo(q);
         }
-        container.appendChild(this.messageContainer);
-        return container;
+        this.messageContainer.appendTo(q);
+        return q;
     }
 }
 
@@ -237,10 +196,10 @@ class Sender {
 }
 
 if (location.port) {
-    path = `${location.hostname}:${location.port}/room/1/`;
+    path = `${location.hostname}:${location.port}/`;
 }
 else {
-    path = `${location.hostname}/room/1/`;
+    path = `${location.hostname}/`;
 }
 
 var socket = new WebSocket(`ws://${path}`);
@@ -258,17 +217,14 @@ socket.onmessage = function (event) {
             loading = true;
         }
         if (data == 'history.end') {
-            document.querySelector('.status-indicator-ready').classList.toggle('mdui-hidden');
-            document.querySelector('.status-indicator-loading').classList.toggle('mdui-hidden');
+            $('.status-indicator-ready').toggleClass('mdui-hidden');
+            $('.status-indicator-loading').toggleClass('mdui-hidden');
             loading = false;
         }
     }
     else if (type == 'notice') {
         lastSender = null;
-        var base = document.createElement('div');
-        base.classList.add('notice');
-        base.appendChild(document.createTextNode(data));
-        document.querySelector('.message-container').appendChild(base);
+        $(`<div class="notice">${data}</div>`).appendTo('.message-container');
     }
     else if (type == 'message') {
         msg = new Message();
@@ -293,7 +249,7 @@ socket.onmessage = function (event) {
 
         if (msg.empty) return;
 
-        document.querySelector('.message-container').appendChild(msg.container);
+        msg.container.appendTo('.message-container');
     }
 
     if (document.getElementById('autoscroll-checkbox').checked) {
@@ -313,7 +269,7 @@ socket.onmessage = function (event) {
     }
 }
 
-document.querySelector('.editor').addEventListener('keydown', (e) => {
+$('.editor').keydown(e => {
     if (e.key == 'Enter' && e.ctrlKey) {
         document.getElementById('send-button').click();
     }
@@ -329,8 +285,8 @@ socket.onopen = function (event) {
 }
 
 socket.onclose = function (event) {
-    document.querySelector('.status-indicator-ready').classList.toggle('mdui-hidden');
-    document.querySelector('.status-indicator-fail').classList.toggle('mdui-hidden');
+    $('.status-indicator-ready').toggleClass('mdui-hidden');
+    $('.status-indicator-fail').toggleClass('mdui-hidden');
     quill.disable();
 }
 
