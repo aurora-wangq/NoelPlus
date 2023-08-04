@@ -6,7 +6,7 @@
 
 <style>
     html {
-        background-image: url('{% static "static/images/loginback.jpg" %}');
+        background-image: url('{% static "images/loginback.jpg" %}');
         height: 100%;
         background-position: center;
         background-repeat: no-repeat;
@@ -56,11 +56,17 @@
     </div>
     <div class="mdui-row" >
         <div class="mdui-col" >
-            <p class="mdui-valign"  style="padding-left: 40%;">
+            <p class="mdui-valign"  style="padding-left: 42%;">
                 没有账号？<a href="{% url 'user:register' %}">注册</a>
             </p>
         </div>
     </div>
+</div>
+
+<div style="text-align: center;">
+    <footer>
+        ©2023 鲁ICP备2023023515号-1
+    </footer>
 </div>
 
 <script>

@@ -11,7 +11,6 @@ from .models import *
 class HttpResponseImATeaPot(HttpResponse):
     status_code = 418
 
-
 def mdconv(text: str):
     md = markdown.Markdown(
         extensions=[
@@ -65,7 +64,7 @@ def blog(request, blog_id):
     }
     return render(request, 'blog/post.html', context)
 
-
+#修改博客
 @login_required(login_url='user:login')
 def edit(request: HttpRequest, post_id: int):
     blog = Blog.objects.get(id=post_id)
@@ -84,7 +83,7 @@ def edit(request: HttpRequest, post_id: int):
         blog.save()
         return redirect('blog:blog', post_id)
 
-
+#评论
 @login_required(login_url='user:login')
 def comment(request, blog_id):
     if request.method == 'GET':
