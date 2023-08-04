@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}发布博客{% endblock %}
+{% block title %}编辑{% endblock %}
 
 {% block head %}
 {% endblock %}
 
 {% block content %}
-<body>
 <div class="mdui-container" style="margin-top: 16px;">
     <div id="editor" style="width: 100%; height: 600px">
     </div>
@@ -19,12 +18,12 @@
         </button>
     </div>
 </div>
-<form class="mdui-hidden" method="post" action="{% url 'blog:new' %}">
+
+<form class="mdui-hidden" method="post" action="{% url 'blog:edit' blog.id %}">
     {% csrf_token %}
     <textarea name="content" id="content-input"></textarea>
 </form>
-<script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
-<script src="{% static 'node_modules/monaco-editor/min/vs/loader.js' %}"></script>
+
 <script>
     let editor;
     $(function () {
@@ -33,7 +32,7 @@
                 "vs": '{% static "node_modules/monaco-editor/min/vs" %}'
             }
         });
-        value = `title: Untitled\n\n<span id="readmore-anchor" />`;
+        value = `{{ blog.content | escapejs }}`;
         require(['vs/editor/editor.main'], function () {
             editor = monaco.editor.create(document.getElementById('editor'), {
                 value: value,
@@ -48,5 +47,6 @@
         });
     });
 </script>
-</body>
+<script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+<script src="{% static 'node_modules/monaco-editor/min/vs/loader.js' %}"></script>
 {% endblock %}

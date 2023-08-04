@@ -2,61 +2,39 @@
 
 {% load static %}
 
-{% load markdown_extras %}
-
 {% block title %}博客详情{% endblock %}
+
+
+{% block head %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="{% static 'css/blog.css' %}" />
+{% endblock %}
 
 {% block content %}
 
-<style>
-    .post-title {
-        font-size: 48px;
-        font-weight: 200;
-    }
-    .post-content {
-        font-size: 32px;
-        padding-top: 12px;
-        font-weight: 300;
-    }
 
-    .nickname,
-    .username,
-    .user-title {
-        margin-left: 6px;
-        margin-right: 6px;
-    }
+<link rel="stylesheet" href="{% static 'css/codehilite.css' %}" />
 
-    .comment-username {
-        font-weight: 300;
-        font-size: 16px;
-    }
 
-    .comment-content {
-        margin: 0 0 0 0;
-        font-size: 18px;
-    }
-
-	body {
-		background: none;
-		background-color: rgba(212, 175, 200, 0.051);
-	}
-</style>
-<body>
-<br />
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<link rel="stylesheet" href="{% static 'static/css/default.css' %}" />
+{% if editable %}
+<a href="{% url 'blog:edit' blog.id %}" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-pink-200" style="z-index: 1000;">
+    <i class="mdui-icon material-icons">edit</i>
+</a>
+{% endif %}
 
 <div class="mdui-container" style="padding-top: 32px;">
     <div class="mdui-row">
         <div class="mdui-text-center post-title">
-            {{blog.title}}
+            {{blog.meta.title}}
         </div>
     </div>
     <div class="mdui-row">
         <div class="mdui-text-center post-info">
+            <i class="mdui-icon material-icons">account_circle</i>
             @{{blog.author.username}} |
             <span title='{{ post.pub_time|date:"c" }}'>
+                <i class="mdui-icon material-icons">today</i>
                 {{ blog.pub_time | date:"Y/m/d G:i" }}
             </span>
         </div>
@@ -64,7 +42,7 @@
 
     <div class="mdui-row">
         <div class="mdui-col-offset-md-2 mdui-col-md-8 mdui-col-xs-12">
-            {{ blog.content | markdown | safe }}
+            {{ blog.formatted | safe }}
         </div>
     </div>
 </div>

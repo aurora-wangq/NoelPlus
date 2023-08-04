@@ -4,7 +4,6 @@ channels
 daphne
 Pygments
 markdown
-django-mdeditor
 django
 pymysql
 Pillow

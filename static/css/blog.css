@@ -1,0 +1,40 @@
+.post-title {
+    font-size: 48px;
+    font-weight: 200;
+}
+
+.post-content {
+    font-size: 32px;
+    padding-top: 12px;
+    font-weight: 300;
+}
+
+.nickname,
+.username,
+.user-title {
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.comment-username {
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.comment-content {
+    margin: 0 0 0 0;
+    font-size: 18px;
+}
+
+.codehilite {
+    background: #eee;
+    border-radius: 4px;
+    padding: 2px 8px 2px 8px;
+}
+
+:not(pre) > code {
+    background-color: #eee;
+    border-radius: 4px;
+    margin: 0 4px 0 4px;
+    padding: 1px 4px 1px 4px;
+}

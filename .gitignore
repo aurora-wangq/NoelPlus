@@ -149,4 +149,4 @@ thumbnail/*
 .idea/
 .history/
 node_modules/
-migrations
+migrations/

@@ -4,8 +4,7 @@
 
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/default.css' %}"/>
-<link rel="stylesheet" href="{% static 'mdeditor/css/editormd.preview.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/codehilite.css' %}"/>
 <style>
 
 	.post-content {
@@ -49,10 +48,8 @@
 	<br />
 
 	<div class="mdui-row">
-		<div class="mdui-col-offset-md-2 mdui-col-md-8 mdui-col-xs-12 editormd-preview-container">
-			<span class="post-content markdown-body editormd-preview-container" style="font-weight:500; font-size: 18px">
-				{{post.content}}
-			</span>
+		<div class="mdui-col-offset-md-2 mdui-col-md-8 mdui-col-xs-12">
+			{{post.content}}
 		</div>
 	</div>
 

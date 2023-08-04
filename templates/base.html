@@ -7,13 +7,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Noel</title>
-    <link rel="stylesheet" href="{% static 'static/css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'static/css/user-titles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/user-titles.css' %}" />
     <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" />
-    <link rel="icon" type="image/x-icon" href="{% static 'static/images/favicon.ico' %}">
-    <script src="{% static 'static/js/jquery-3.7.0.min.js' %}"></script>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <script src="{% static 'js/jquery-3.7.0.min.js' %}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     {% block head %}{% endblock %}
@@ -30,7 +30,7 @@
             <a href="{% url 'zone:home' %}" class="mdui-typo-headline">
                 <h1 style="font-weight:400; font-size: 30px; text-align:center">
                     N
-                    <img src="{% static 'static/images/qll.png' %}" style="width:25px;height:25px;">
+                    <img src="{% static 'images/qll.png' %}" style="width:25px;height:25px;">
                     e l
                 </h1>
             </a>
@@ -41,7 +41,7 @@
             </a>
             <ul class="mdui-menu" id="account-menu">
                 <li class="mdui-menu-item">
-                    <a href="{% url 'user:user_page' %}" class="mdui-ripple">
+                    <a href="{% url 'user:my' %}" class="mdui-ripple">
                         <b>{{user.username}}</b>
                     </a>
                 </li>

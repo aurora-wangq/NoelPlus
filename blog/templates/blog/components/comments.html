@@ -18,7 +18,7 @@
 <div class="comment" comment-reply="{{comment.reply}}" comment-index="{{forloop.counter}}">
     <div class="mdui-row">
         <div class="mdui-col-offset-md-2 mdui-col-md-1 mdui-col-xs-2">
-            <a href="{% url 'user:others_page' comment.author.id %}">
+            <a href="{% url 'user:user' comment.author.id %}">
                 <img src="{{ comment.author.avatar.url }}" class="avatar" />
             </a>
         </div>

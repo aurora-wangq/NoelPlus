@@ -4,7 +4,7 @@ from django.conf import settings
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='作者')
-    content = models.CharField('内容', max_length=10000)
+    content = models.TextField('内容')
     images = models.ImageField('配图', upload_to='media/post/post_images')
     pinned = models.BooleanField('是否顶置', default=False)
 class Like(models.Model):
@@ -13,7 +13,7 @@ class Like(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='所属文章')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='评论者', related_name='帖子评论者')
-    content = models.CharField('评论内容', max_length=1000)
+    content = models.TextField('评论内容', max_length=1000)
     pub_time = models.DateTimeField('发布时间')
     reply = models.IntegerField('Reply index', default=-1)
 class Notice(models.Model):

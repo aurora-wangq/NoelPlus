@@ -2,9 +2,10 @@
 
 {% block title %}博客{% endblock %}
 
-{% load markdown_extras %}
+{% load extras %}
 
 {% block head %}
+<link rel="stylesheet" href="/static/css/blog.css" />
 <style>
     .post-title {
         font-size: 48px;
@@ -30,7 +31,6 @@
 
 	body {
 		background: none;
-		background-color: rgba(212, 175, 200, 0.051);
 	}
 </style>
 {% endblock %}
@@ -47,14 +47,16 @@
     <div class="mdui-row" style="margin-top: 32px;">
         <div class="mdui-text-center mdui-text-truncate post-title">
             <a class="post-title-link" href="{% url 'blog:blog' blog.id %}">
-                {{blog.title}}
+                {{blog.meta.title}}
             </a>
         </div>
     </div>
     <div class="mdui-row">
         <div class="mdui-text-center post-info">
+            <i class="mdui-icon material-icons">account_circle</i>
             @{{blog.author.username}} |
             <span title='{{ blog.pub_time|date:"c" }}'>
+                <i class="mdui-icon material-icons">today</i>
                 {{ blog.pub_time | date:"Y/m/d G:i" }}
             </span>
         </div>
@@ -62,7 +64,7 @@
 
     <div class="mdui-row">
         <div class="mdui-col-offset-md-2 mdui-col-md-8 mdui-col-xs-12 mdui-truncate">
-            {{blog.content | overview | markdown | safe}}
+            {{blog.formatted | overview | safe}}
         </div>
     </div>
 
