@@ -10,6 +10,7 @@ urlpatterns = [
     path('user/',include('user.urls')),
     path('chat/',include('chat.urls')),
     path('blog/',include('blog.urls')),
+    path('gpt/',include('gpt.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

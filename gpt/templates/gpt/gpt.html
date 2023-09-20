@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}问候问答{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="mdui-container gpt-view">
+    <div class="mdui-row">
+        <div class="mdui-col-xs-12 mdui-col-offset-md-3 mdui-col-md-6">
+            <div class="mdui-row" id="reply"></div>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input class="mdui-textfield-input" name="user_input" id="user_input"/>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="mdui-row">
+    <div class="mdui-col-offset-md-8 mdui-col-md-1">
+        <button class="mdui-btn mdui-ripple" onclick="Ask()">提问</button>
+    </div>
+</div>
+<script>
+    function Ask()
+    {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "");
+        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.send(JSON.stringify({"user_input": document.getElementById("user_input").value}));
+        xhr.onreadystatechange = function () {
+			if (xhr.readyState == 4 && xhr.status == 200) {
+				json_data = JSON.parse(xhr.responseText);
+                var new_reply = document.createElement('div');
+                new_reply.innerText = json_data["ai_reply"];
+                document.getElementById("reply").appendChild(new_reply);
+			}
+			else if (xhr.readyState == 4) {
+				mdui.snackbar("Failed" + xhr.status);
+			}
+		};
+    }
+</script>
+{% endblock %}

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'zone.apps.ZoneConfig',
     'chat.apps.ChatConfig',
     'blog.apps.BlogConfig',
+    'gpt.apps.GptConfig',
     'channels',
 ]
 

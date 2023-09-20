@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "monaco-editor": "^0.40.0"
+    "highlight.js": "^11.8.0",
+    "monaco-editor": "^0.40.0",
+    "prop-types": "^15.8.1",
+    "react-markdown": "^8.0.7"
   }
 }
