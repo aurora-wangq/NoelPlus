@@ -36,8 +36,9 @@ def gpt(request):
     }
     if request.method == 'GET':
         return render(request, 'gpt/gpt.html', context)
+    
     elif request.method == 'POST':
-        openai.api_key=""
+        openai.api_key="sk-U0WLocu4KWrrrh678f6d82F522D34042A6Ce78D6C26eA921"
         openai.api_base = "https://api.ai-yyds.com/v1"
         json_data = json.loads(request.body.decode("utf-8"))
         user_input = json_data.get("user_input")
@@ -48,7 +49,7 @@ def gpt(request):
             if i["uid"] == user.id:
                 have_user_log_message = 1
                 i["message"].append(user_message_dict)
-                response = openai.ChatCompletion.create(model="gpt-4",messages=i["message"])
+                response = openai.ChatCompletion.create(model="gpt-3.5-turbo",messages=i["message"])
                 break
         if have_user_log_message == 0:
             message = []

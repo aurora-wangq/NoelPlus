@@ -5,6 +5,7 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 {% block content %}
 {% load static %}
+<script src="{% static 'js/jquery-3.7.0.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/codehilite.css' %}" />
 <link href="{% static 'css/gpt.css' %}" rel="stylesheet">
 <div class="mdui-container gpt-view">
@@ -35,9 +36,23 @@
         xhr.onreadystatechange = function () {
 			if (xhr.readyState == 4 && xhr.status == 200) {
 				json_data = JSON.parse(xhr.responseText);
+                var user_input = document.createElement('div');
                 var new_reply = document.createElement('div');
+                var ai_avatar = $('<img>').attr('src',"{% static 'images/gptavatar.png' %}")
+                var user_avatar = $('<img>').attr('src',"/media/{{user.avatar}}")
+                var divider = $('<div></div>').attr('class','mdui-divider-inset')
+                ai_avatar.attr('class','appbar-avatar')
+                ai_avatar.attr('style','height: 35px; width: 35px; padding-left: 10px;');
+                user_avatar.attr('class','appbar-avatar')
+                user_avatar.attr('style','height: 35px; width: 35px; padding-left: 10px;');
+                user_input.innerHTML = json_data["user_input"];
                 new_reply.innerHTML = json_data["ai_reply"];
-                document.getElementById("reply").appendChild(new_reply);
+                $('#reply').append(user_avatar);
+                $('#reply').append(divider);
+                $('#reply').append(user_input);
+                $('#reply').append(ai_avatar);
+                $('#reply').append(divider.clone(true));
+                $('#reply').append(new_reply);
 			}
 			else if (xhr.readyState == 4) {
 				mdui.snackbar("Failed" + xhr.status);
