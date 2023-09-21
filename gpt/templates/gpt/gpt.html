@@ -24,7 +24,9 @@
 <div class="mdui-container">
     <div class="mdui-row">
         <div class="mdui-col-xs-12 mdui-col-md-8 mdui-col-offset-md-2">
-            <div class="message-container" id="reply"></div>
+            <div class="message-container" id="reply">
+                <div class="mdui-spinner status-indicator status-indicator-loading mdui-hidden" style="height: 20px; width: 20px;" id="loading"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -33,7 +35,7 @@
     <div class="mdui-row mdui-valign">
         <div class="mdui-col-xs-11 mdui-col-offset-md-2 mdui-col-md-8">
             <div class="mdui-textfield">
-                <textarea class="mdui-textfield-input" placeholder="Message..." id="input-prompt"></textarea>
+                <textarea class="mdui-textfield-input" placeholder="在此提问 . . . . . ." id="input-prompt"></textarea>
             </div>
         </div>
         <div class="mdui-col-xs-1">
@@ -42,7 +44,9 @@
             </button>
         </div>
     </div>
+    <div class="notice">基于OpenAI 遵循OpenAI API的使用协议 符合SOC 2 Type 1标准</div>
 </div>
+
 <script>
     function wrap_content(data, username, avatar) {
         return $(`<div class="mdui-container message">
@@ -64,6 +68,7 @@
     });
     $('#button-gpt4').click(function() {
         model = 'gpt-4';
+        mdui.snackbar('使用GPT-4模型需要特殊权限,如果您未获取过权限请联系AenStarAX或MoveToEx');
     });
     $('#button-submit').click(ask);
     $('#input-prompt').keydown(e => {
@@ -77,8 +82,12 @@
 
         $('#input-prompt').attr('disabled', 'true');
         $('#button-submit').attr('disabled', 'true');
+        $('#loading').toggleClass('mdui-hidden')
         if (input.trim().length == 0) {
-            mdui.snackbar('Empty prompt is not allowed');
+            mdui.snackbar('提问不可以为空 ！');
+            $('#button-submit').removeAttr('disabled');
+            $('#input-prompt').removeAttr('disabled');
+            $('#loading').toggleClass('mdui-hidden')
             return;
         }
         wrap_content(input, $('#input-username').val(), $('#input-avatar').val()).appendTo($('#reply'));
@@ -106,6 +115,7 @@
                 mdui.snackbar('Failed: ' + xhr.responseText);
             }
         }).always(() => {
+            $('#loading').toggleClass('mdui-hidden');
             $('#button-submit').removeAttr('disabled');
             $('#input-prompt').removeAttr('disabled');
         });

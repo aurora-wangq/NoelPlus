@@ -1,10 +1,11 @@
 .message-container {
-    height: 512px;
+    height: 508px;
     margin: 5% 0 5% 0;
     border: 1px solid #cccccc;
     padding: 12px 3px 12px 3px;
     width: 100%;
     max-height: 612px;
+    position:relative;
     overflow: scroll;
 }
 
@@ -31,4 +32,16 @@
 .message {
     margin-top: 8px;
     margin-bottom: 8px;
+}
+
+.status-indicator {
+    position: absolute;
+    right: 16px;
+    bottom: 8px;
+}
+
+.notice {
+    color: rgba(128, 128, 128, 0.399);
+    text-align: center;
+    font-size: 12px;
 }
