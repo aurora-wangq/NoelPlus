@@ -38,7 +38,7 @@ def gpt(request):
         return render(request, 'gpt/gpt.html', context)
     
     elif request.method == 'POST':
-        openai.api_key="sk-U0WLocu4KWrrrh678f6d82F522D34042A6Ce78D6C26eA921"
+        openai.api_key=""
         openai.api_base = "https://api.ai-yyds.com/v1"
         json_data = json.loads(request.body.decode("utf-8"))
         user_input = json_data.get("user_input")
