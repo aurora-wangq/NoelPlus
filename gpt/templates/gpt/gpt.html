@@ -1,63 +1,114 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}问候问答{% endblock %}
+
+{% block head %}
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-{% block content %}
-{% load static %}
-<script src="{% static 'js/jquery-3.7.0.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/codehilite.css' %}" />
 <link href="{% static 'css/gpt.css' %}" rel="stylesheet">
-<div class="mdui-container gpt-view">
+{% endblock %}
+
+{% block content %}
+<input class="mdui-hidden" id="input-username" value="{{user.username}}">
+<input class="mdui-hidden" id="input-avatar" value="{{user.avatar.url}}">
+
+<br/>
+
+<div class="mdui-tab mdui-tab-centered mdui-tab-full-width" mdui-tab>
+    <a id="button-gpt3" class="mdui-ripple">GPT-3.5-Turbo</a>
+    <a id="button-gpt4" class="mdui-ripple">GPT-4</a>
+</div>
+
+<div class="mdui-container">
     <div class="mdui-row">
-        <div class="mdui-col-xs-12 mdui-col-offset-md-3 mdui-col-md-6">
-            <div class="message-container mdui-container" id="reply"></div>
-            <hr>
-            <form action="" method="post">
-                {% csrf_token %}
-                <input class="mdui-textfield-input" name="user_input" id="user_input"/>
-            </form>
+        <div class="mdui-col-xs-12 mdui-col-md-8 mdui-col-offset-md-2">
+            <div class="message-container" id="reply"></div>
         </div>
     </div>
 </div>
-<div class="mdui-row">
-    <div class="mdui-col-offset-md-8 mdui-col-md-1">
-        <button class="mdui-btn mdui-ripple" onclick="Ask()">提问</button>
+
+<div class="mdui-container">
+    <div class="mdui-row mdui-valign">
+        <div class="mdui-col-xs-11 mdui-col-offset-md-2 mdui-col-md-8">
+            <div class="mdui-textfield">
+                <textarea class="mdui-textfield-input" placeholder="Message..." id="input-prompt"></textarea>
+            </div>
+        </div>
+        <div class="mdui-col-xs-1">
+            <button class="mdui-btn mdui-ripple mdui-btn-icon" id="button-submit">
+                <i class="mdui-icon material-icons">send</i>
+            </button>
+        </div>
     </div>
 </div>
 <script>
-    function Ask()
-    {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "");
-        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-        xhr.setRequestHeader("content-type", "application/json");
-        xhr.send(JSON.stringify({"user_input": document.getElementById("user_input").value}));
-        xhr.onreadystatechange = function () {
-			if (xhr.readyState == 4 && xhr.status == 200) {
-				json_data = JSON.parse(xhr.responseText);
-                var user_input = document.createElement('div');
-                var new_reply = document.createElement('div');
-                var ai_avatar = $('<img>').attr('src',"{% static 'images/gptavatar.png' %}")
-                var user_avatar = $('<img>').attr('src',"/media/{{user.avatar}}")
-                var divider = $('<div></div>').attr('class','mdui-divider-inset')
-                ai_avatar.attr('class','appbar-avatar')
-                ai_avatar.attr('style','height: 35px; width: 35px; padding-left: 10px;');
-                user_avatar.attr('class','appbar-avatar')
-                user_avatar.attr('style','height: 35px; width: 35px; padding-left: 10px;');
-                user_input.innerHTML = json_data["user_input"];
-                new_reply.innerHTML = json_data["ai_reply"];
-                $('#reply').append(user_avatar);
-                $('#reply').append(divider);
-                $('#reply').append(user_input);
-                $('#reply').append(ai_avatar);
-                $('#reply').append(divider.clone(true));
-                $('#reply').append(new_reply);
-			}
-			else if (xhr.readyState == 4) {
-				mdui.snackbar("Failed" + xhr.status);
-			}
-		};
+    function wrap_content(data, username, avatar) {
+        return $(`<div class="mdui-container message">
+                    <div class="mdui-row message-header mdui-valign">
+                        <div class="mdui-col-md-1 mdui-col-xs-2">
+                            <img class="message-avatar" src="${avatar}">
+                        </div>
+                        <div class="mdui-col-md-11 mdui-col-xs-10">
+                            <span class="message-username">${username}</span>
+                        </div>
+                    </div>
+                    <div class="mdui-row message-content mdui-col-offset-xs-1">${data}</div>
+                    </div>`);
+    }
+
+    var model = 'gpt-3.5-turbo';
+    $('#button-gpt3').click(function() {
+        model = 'gpt-3.5-turbo';
+    });
+    $('#button-gpt4').click(function() {
+        model = 'gpt-4';
+    });
+    $('#button-submit').click(ask);
+    $('#input-prompt').keydown(e => {
+        if (e.ctrlKey && e.key == 'Enter') {
+            $('#button-submit').click();
+        }
+    })
+    function ask() {
+        input = $("#input-prompt").val();
+        $('#input-prompt').val('');
+
+        $('#input-prompt').attr('disabled', 'true');
+        $('#button-submit').attr('disabled', 'true');
+        if (input.trim().length == 0) {
+            mdui.snackbar('Empty prompt is not allowed');
+            return;
+        }
+        wrap_content(input, $('#input-username').val(), $('#input-avatar').val()).appendTo($('#reply'));
+        $.ajax({
+            type: 'POST',
+            url: '{% url "gpt:gpt" %}',
+            data: {
+                'prompt': input,
+                'model': model
+            },
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: data => {
+                var elem = wrap_content(data.content, 'ChatGPT', "{% static 'images/gpt.svg' %}");
+                if (data.model == 'gpt-3.5-turbo') {
+                    elem.find('.message-avatar').addClass('message-avatar-gpt3');
+                }
+                else if (data.model == 'gpt-4') {
+                    elem.find('.message-avatar').addClass('message-avatar-gpt4');
+                }
+                elem.appendTo($('#reply'));
+            },
+            error: (xhr, text) => {
+                mdui.snackbar('Failed: ' + xhr.responseText);
+            }
+        }).then(() => {
+            $('#button-submit').removeAttr('disabled');
+            $('#input-prompt').removeAttr('disabled');
+        });
     }
 </script>
 {% endblock %}

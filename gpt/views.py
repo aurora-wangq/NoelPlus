@@ -1,13 +1,13 @@
-#gpt-view
 from django.shortcuts import render
 import openai
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden, HttpRequest
 import json
 from user.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import markdown
+import collections
 
 def mdconv(text: str):
     md = markdown.Markdown(
@@ -26,52 +26,42 @@ def mdconv(text: str):
     res = md.convert(text)
     return res
 
-log_message = []
-#log_message = [{"uid": 1, "message": message[{"role": "user","content": user_input},]},]
+history = {}
+
 @login_required(login_url='user:login')
-def gpt(request):
-    user = User.objects.get(username=request.user.username)
+def gpt(request: HttpRequest):
+    user = request.user
     context = {
         "user": user,
     }
     if request.method == 'GET':
         return render(request, 'gpt/gpt.html', context)
-    
     elif request.method == 'POST':
-        openai.api_key=""
+        openai.api_key = ""
         openai.api_base = "https://api.ai-yyds.com/v1"
-        json_data = json.loads(request.body.decode("utf-8"))
-        user_input = json_data.get("user_input")
-        user_message_dict = {"role": "user","content": user_input}
-        have_user_log_message = 0
-        response = []
-        for i in log_message:
-            if i["uid"] == user.id:
-                have_user_log_message = 1
-                i["message"].append(user_message_dict)
-                response = openai.ChatCompletion.create(model="gpt-3.5-turbo",messages=i["message"])
-                break
-        if have_user_log_message == 0:
-            message = []
-            message.append(user_message_dict)
-            log_message.append({"uid": user.id, "message": message})
-            response = openai.ChatCompletion.create(model="gpt-3.5-turbo",messages=message)
 
-        reply = response["choices"][0]["message"]["content"]
-        ai_message_dict = {"role": "assistant", "content": reply}
-
-        for i in log_message:
-            if i["uid"] == user.id:
-                i["message"].append(ai_message_dict)
-                break
-
-        for i in log_message:
-            if len(i["message"]) > 4:
-                del(i["message"][0])
-                del(i["message"][0])
-
-        AGroup_Chat = {
-            "user_input": user_input,
-            "ai_reply": mdconv(reply),
+        input = request.POST
+        if input['model'] == 'gpt-4' and 'gpt4_permitted' not in [ x.name for x in user.groups.all() ]:
+            return HttpResponseForbidden('access denied')
+        
+        msg = {
+            "role": "user",
+            "content": input['prompt']
         }
-        return JsonResponse(AGroup_Chat)
+        if history.get(user.id):
+            history[user.id].append(msg)
+        else:
+            history[user.id] = collections.deque([msg], maxlen=8)
+
+        response = openai.ChatCompletion.create(model=input['model'],messages=list(history[user.id]))
+        reply = response["choices"][0]["message"]["content"]
+
+        history[user.id].append({
+            'role': 'assistant',
+            'content': reply
+        })
+
+        return JsonResponse({
+            'model': input['model'],
+            'content': mdconv(reply)
+        })
