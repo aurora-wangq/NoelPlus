@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 
 {% block title %}问候问答{% endblock %}
-
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 {% block content %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/codehilite.css' %}" />
+<link href="{% static 'css/gpt.css' %}" rel="stylesheet">
 <div class="mdui-container gpt-view">
     <div class="mdui-row">
         <div class="mdui-col-xs-12 mdui-col-offset-md-3 mdui-col-md-6">
-            <div class="mdui-row" id="reply"></div>
+            <div class="message-container mdui-container" id="reply"></div>
+            <hr>
             <form action="" method="post">
                 {% csrf_token %}
                 <input class="mdui-textfield-input" name="user_input" id="user_input"/>
@@ -32,7 +36,7 @@
 			if (xhr.readyState == 4 && xhr.status == 200) {
 				json_data = JSON.parse(xhr.responseText);
                 var new_reply = document.createElement('div');
-                new_reply.innerText = json_data["ai_reply"];
+                new_reply.innerHTML = json_data["ai_reply"];
                 document.getElementById("reply").appendChild(new_reply);
 			}
 			else if (xhr.readyState == 4) {
