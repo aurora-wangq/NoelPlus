@@ -1,12 +1,13 @@
 from django.shortcuts import render
 import openai
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
-from django.http import JsonResponse, HttpResponseForbidden, HttpRequest
+from django.http import JsonResponse, HttpResponseForbidden, HttpRequest, HttpResponseServerError
 import json
 from user.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import markdown
+import time
 import collections
 
 def mdconv(text: str):
@@ -33,16 +34,20 @@ def gpt(request: HttpRequest):
     user = request.user
     context = {
         "user": user,
+        'messages': [{
+            'role': x['role'],
+            'content': mdconv(x['content'])
+        } for x in history.get(user.id, [])]
     }
     if request.method == 'GET':
         return render(request, 'gpt/gpt.html', context)
     elif request.method == 'POST':
+        input = request.POST
         openai.api_key = ""
         openai.api_base = "https://api.ai-yyds.com/v1"
 
-        input = request.POST
         if input['model'] == 'gpt-4' and 'gpt4_permitted' not in [ x.name for x in user.groups.all() ]:
-            return HttpResponseForbidden('提问被驳回,原因是没有权限')
+            return HttpResponseForbidden('您无权访问GPT4')
         
         msg = {
             "role": "user",
@@ -53,7 +58,11 @@ def gpt(request: HttpRequest):
         else:
             history[user.id] = collections.deque([msg], maxlen=8)
 
-        response = openai.ChatCompletion.create(model=input['model'],messages=list(history[user.id]))
+        try:
+            response = openai.ChatCompletion.create(model=input['model'],messages=list(history[user.id]))
+        except Exception as e:
+            return HttpResponseServerError(str(e))
+        
         reply = response["choices"][0]["message"]["content"]
 
         history[user.id].append({

@@ -14,7 +14,7 @@
 <input class="mdui-hidden" id="input-username" value="{{user.username}}">
 <input class="mdui-hidden" id="input-avatar" value="{{user.avatar.url}}">
 
-<br/>
+<br />
 
 <div class="mdui-tab mdui-tab-centered mdui-tab-full-width" mdui-tab>
     <a id="button-gpt3" class="mdui-ripple">GPT-3.5-Turbo</a>
@@ -24,7 +24,30 @@
 <div class="mdui-container">
     <div class="mdui-row">
         <div class="mdui-col-xs-11 mdui-col-offset-md-2 mdui-col-md-8">
-            <div class="message-container" id="reply">
+            <div class="message-container">
+                {% for i in messages %}
+                <div class="mdui-container message">
+                    <div class="mdui-row message-header mdui-valign">
+                        <div class="mdui-col-md-1 mdui-col-xs-2">
+                            {% if i.role == 'user' %}
+                            <img class="message-avatar" src="{{ user.avatar.url }}">
+                            {% else %}
+                            <img class="message-avatar message-avatar-gpt-unknown" src="{% static 'images/gpt.svg' %}">
+                            {% endif %}
+                        </div>
+                        <div class="mdui-col-md-11 mdui-col-xs-10">
+                            <span class="message-username">
+                                {% if i.role == 'user' %}
+                                {{ user.username }}
+                                {% else %}
+                                ChatGPT
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mdui-row message-content mdui-col-offset-xs-1">{{ i.content | safe }}</div>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -39,8 +62,7 @@
         </div>
         <div class="mdui-col-xs-1">
             <button class="mdui-btn mdui-ripple mdui-btn-icon" id="button-submit">
-                <i class="mdui-icon material-icons" id="sendico">send</i>
-                <div class="mdui-spinner status-indicator status-indicator-loading mdui-hidden" style="height: 20px; width: 20px;" id="loading"></div>
+                <i class="mdui-icon material-icons">send</i>
             </button>
         </div>
     </div>
@@ -63,10 +85,10 @@
     }
 
     var model = 'gpt-3.5-turbo';
-    $('#button-gpt3').click(function() {
+    $('#button-gpt3').click(function () {
         model = 'gpt-3.5-turbo';
     });
-    $('#button-gpt4').click(function() {
+    $('#button-gpt4').click(function () {
         model = 'gpt-4';
         mdui.snackbar('使用GPT-4模型需要特殊权限,如果您未获取过权限请联系AenStarAX或MoveToEx');
     });
@@ -79,17 +101,20 @@
     function ask() {
         input = $("#input-prompt").val();
         $('#input-prompt').val('');
-        $('#loading').toggleClass('mdui-hidden');
-        $('#sendico').toggleClass('mdui-hidden');
-        $('#input-prompt').attr('disabled', 'true');
-        $('#button-submit').attr('disabled', 'true');
         if (input.trim().length == 0) {
             mdui.snackbar('提问不可以为空 ！');
-            $('#button-submit').removeAttr('disabled');
-            $('#input-prompt').removeAttr('disabled');
             return;
         }
-        wrap_content(input, $('#input-username').val(), $('#input-avatar').val()).appendTo($('#reply'));
+        wrap_content('<p>' + input + '</p>', $('#input-username').val(), $('#input-avatar').val()).appendTo($('.message-container'));
+        var elem = wrap_content(`<div class="mdui-spinner"></div>`, 'ChatGPT', "{% static 'images/gpt.svg' %}");
+        if (model == 'gpt-3.5-turbo') {
+            elem.find('.message-avatar').addClass('message-avatar-gpt3');
+        }
+        else if (model == 'gpt-4') {
+            elem.find('.message-avatar').addClass('message-avatar-gpt4');
+        }
+        elem.appendTo($('.message-container'));
+        mdui.mutation();
         $.ajax({
             type: 'POST',
             url: '{% url "gpt:gpt" %}',
@@ -100,24 +125,21 @@
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}'
             },
+            beforeSend: () => {
+                $('#input-prompt').attr('disabled', 'true');
+                $('#button-submit').attr('disabled', 'true');
+            },
             success: data => {
-                var elem = wrap_content(data.content, 'ChatGPT', "{% static 'images/gpt.svg' %}");
-                if (data.model == 'gpt-3.5-turbo') {
-                    elem.find('.message-avatar').addClass('message-avatar-gpt3');
-                }
-                else if (data.model == 'gpt-4') {
-                    elem.find('.message-avatar').addClass('message-avatar-gpt4');
-                }
-                elem.appendTo($('#reply'));
+                elem.find('.message-content').html(data.content);
             },
             error: (xhr, text) => {
-                mdui.snackbar('请求失败: ' + xhr.responseText);
+                elem.find('.message-content').html(`<div class="message-error">
+                    <i class="mdui-icon material-icons">error</i>${xhr.status}: ${xhr.responseText}
+                </div>`);
             }
         }).always(() => {
             $('#button-submit').removeAttr('disabled');
             $('#input-prompt').removeAttr('disabled');
-            $('#loading').toggleClass('mdui-hidden');
-            $('#sendico').toggleClass('mdui-hidden');
         });
     }
 </script>

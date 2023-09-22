@@ -22,6 +22,10 @@
     background-color: #9d61e5;
 }
 
+.message-avatar-gpt-unknown {
+    background-color: black;
+}
+
 .message-username {
     font-size: 18px;
     font-weight: 500;
@@ -33,14 +37,12 @@
     margin-bottom: 8px;
 }
 
-.status-indicator {
-    position: fixed;
-    right: 16px;
-    bottom: 8px;
-}
-
 .notice {
     color: rgba(128, 128, 128, 0.399);
     text-align: center;
     font-size: 12px;
+}
+
+.message-error {
+    color: darkred;
 }
