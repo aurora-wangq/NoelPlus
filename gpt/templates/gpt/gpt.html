@@ -106,7 +106,7 @@
             return;
         }
         wrap_content('<p>' + input + '</p>', $('#input-username').val(), $('#input-avatar').val()).appendTo($('.message-container'));
-        var elem = wrap_content(`<div class="mdui-spinner"></div>`, 'ChatGPT', "{% static 'images/gpt.svg' %}");
+        var elem = wrap_content(`<div class="mdui-spinner" style="height: 20px; width: 20px;"></div>`, 'ChatGPT', "{% static 'images/gpt.svg' %}");
         if (model == 'gpt-3.5-turbo') {
             elem.find('.message-avatar').addClass('message-avatar-gpt3');
         }
