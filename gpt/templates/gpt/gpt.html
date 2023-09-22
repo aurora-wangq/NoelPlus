@@ -23,8 +23,9 @@
 
 <div class="mdui-container">
     <div class="mdui-row">
-        <div class="message-container" id="reply">
-            <div class="mdui-spinner status-indicator status-indicator-loading mdui-hidden" style="height: 20px; width: 20px;" id="loading"></div>
+        <div class="mdui-col-xs-11 mdui-col-offset-md-2 mdui-col-md-8">
+            <div class="message-container" id="reply">
+            </div>
         </div>
     </div>
 </div>
@@ -38,7 +39,8 @@
         </div>
         <div class="mdui-col-xs-1">
             <button class="mdui-btn mdui-ripple mdui-btn-icon" id="button-submit">
-                <i class="mdui-icon material-icons">send</i>
+                <i class="mdui-icon material-icons" id="sendico">send</i>
+                <div class="mdui-spinner status-indicator status-indicator-loading mdui-hidden" style="height: 20px; width: 20px;" id="loading"></div>
             </button>
         </div>
     </div>
@@ -77,15 +79,14 @@
     function ask() {
         input = $("#input-prompt").val();
         $('#input-prompt').val('');
-
+        $('#loading').toggleClass('mdui-hidden');
+        $('#sendico').toggleClass('mdui-hidden');
         $('#input-prompt').attr('disabled', 'true');
         $('#button-submit').attr('disabled', 'true');
-        $('#loading').toggleClass('mdui-hidden')
         if (input.trim().length == 0) {
             mdui.snackbar('提问不可以为空 ！');
             $('#button-submit').removeAttr('disabled');
             $('#input-prompt').removeAttr('disabled');
-            $('#loading').toggleClass('mdui-hidden')
             return;
         }
         wrap_content(input, $('#input-username').val(), $('#input-avatar').val()).appendTo($('#reply'));
@@ -110,12 +111,13 @@
                 elem.appendTo($('#reply'));
             },
             error: (xhr, text) => {
-                mdui.snackbar('Failed: ' + xhr.responseText);
+                mdui.snackbar('请求失败: ' + xhr.responseText);
             }
         }).always(() => {
-            $('#loading').toggleClass('mdui-hidden');
             $('#button-submit').removeAttr('disabled');
             $('#input-prompt').removeAttr('disabled');
+            $('#loading').toggleClass('mdui-hidden');
+            $('#sendico').toggleClass('mdui-hidden');
         });
     }
 </script>

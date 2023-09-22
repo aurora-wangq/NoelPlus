@@ -42,7 +42,7 @@ def gpt(request: HttpRequest):
 
         input = request.POST
         if input['model'] == 'gpt-4' and 'gpt4_permitted' not in [ x.name for x in user.groups.all() ]:
-            return HttpResponseForbidden('access denied,please hit AenStarAX or MoveToEx')
+            return HttpResponseForbidden('提问被驳回,原因是没有权限')
         
         msg = {
             "role": "user",
