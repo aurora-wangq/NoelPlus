@@ -68,7 +68,6 @@
     </div>
     <div class="notice">上下文仅记忆过去四轮对话 基于OpenAI 遵循OpenAI API的使用协议 符合SOC 2 Type 1标准</div>
 </div>
-
 <script>
     function wrap_content(data, username, avatar) {
         return $(`<div class="mdui-container message">
@@ -98,6 +97,17 @@
             $('#button-submit').click();
         }
     })
+
+    function scrollmes() {
+        var elem = document.querySelector('.message-container');
+        elem.scroll(
+            {
+                top: elem.scrollHeight,
+                behavior: "smooth",
+            }
+        );
+    }
+
     function ask() {
         input = $("#input-prompt").val();
         $('#input-prompt').val('');
@@ -106,6 +116,7 @@
             return;
         }
         wrap_content('<p>' + input + '</p>', $('#input-username').val(), $('#input-avatar').val()).appendTo($('.message-container'));
+        scrollmes();
         var elem = wrap_content(`<div class="mdui-spinner" style="height: 20px; width: 20px;"></div>`, 'ChatGPT', "{% static 'images/gpt.svg' %}");
         if (model == 'gpt-3.5-turbo') {
             elem.find('.message-avatar').addClass('message-avatar-gpt3');
@@ -114,6 +125,7 @@
             elem.find('.message-avatar').addClass('message-avatar-gpt4');
         }
         elem.appendTo($('.message-container'));
+        scrollmes();
         mdui.mutation();
         $.ajax({
             type: 'POST',
@@ -131,6 +143,7 @@
             },
             success: data => {
                 elem.find('.message-content').html(data.content);
+                scrollmes();
             },
             error: (xhr, text) => {
                 elem.find('.message-content').html(`<div class="message-error">
