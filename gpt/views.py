@@ -43,7 +43,7 @@ def gpt(request: HttpRequest):
         return render(request, 'gpt/gpt.html', context)
     elif request.method == 'POST':
         input = request.POST
-        openai.api_key = ""
+        openai.api_key = "sk-U0WLocu4KWrrrh678f6d82F522D34042A6Ce78D6C26eA921"
         openai.api_base = "https://api.ai-yyds.com/v1"
 
         if input['model'] == 'gpt-4' and 'gpt4_permitted' not in [ x.name for x in user.groups.all() ]:
@@ -56,7 +56,7 @@ def gpt(request: HttpRequest):
         if history.get(user.id):
             history[user.id].append(msg)
         else:
-            history[user.id] = collections.deque([msg], maxlen=8)
+            history[user.id] = collections.deque([msg], maxlen=80)
 
         try:
             response = openai.ChatCompletion.create(model=input['model'],messages=list(history[user.id]))
