@@ -36,14 +36,14 @@ def gpt(request: HttpRequest):
         "user": user,
         'messages': [{
             'role': x['role'],
-            'content': mdconv(x['content'])
+            'content': x['content'] if x['role'] =='user' else mdconv(x['content'])
         } for x in history.get(user.id, [])]
     }
     if request.method == 'GET':
         return render(request, 'gpt/gpt.html', context)
     elif request.method == 'POST':
         input = request.POST
-        openai.api_key = ""
+        openai.api_key = "sk-U0WLocu4KWrrrh678f6d82F522D34042A6Ce78D6C26eA921"
         openai.api_base = "https://api.ai-yyds.com/v1"
 
         if input['model'] == 'gpt-4' and 'gpt4_permitted' not in [ x.name for x in user.groups.all() ]:

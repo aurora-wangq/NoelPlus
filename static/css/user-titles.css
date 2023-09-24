@@ -28,6 +28,13 @@
     animation: rotation 2s infinite cubic-bezier(1, 0, 0, 1);
 }
 
+.user-title-style-aenstarax {
+    background-color: rgba(235, 135, 235, 0.204);
+    color: rgb(231, 39, 39);
+    font-weight: bolder !important;
+    animation: incline 0.5s infinite cubic-bezier(1, 0, 0, 1);
+}
+
 @keyframes floating {
     from {
         transform: translatey(-5px);
@@ -82,6 +89,16 @@
 
     to {
         transform: rotate(359deg);
+    }
+}
+
+@keyframes incline {
+    from {
+        transform: rotate(45deg);
+    }
+
+    to {
+        transform: rotate(45deg);
     }
 }
 

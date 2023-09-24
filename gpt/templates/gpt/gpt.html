@@ -45,7 +45,11 @@
                             </span>
                         </div>
                     </div>
+                    {% if i.role == 'user' %}
+                    <div class="mdui-row message-content mdui-col-offset-xs-1">{{ i.content}}</div>
+                    {% else %}
                     <div class="mdui-row message-content mdui-col-offset-xs-1">{{ i.content | safe }}</div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -115,7 +119,7 @@
             mdui.snackbar('提问不可以为空 ！');
             return;
         }
-        wrap_content('<p>' + input + '</p>', $('#input-username').val(), $('#input-avatar').val()).appendTo($('.message-container'));
+        wrap_content('<xmp>' + input + '</xmp>', $('#input-username').val(), $('#input-avatar').val()).appendTo($('.message-container'));
         scrollmes();
         var elem = wrap_content(`<div class="mdui-spinner" style="height: 20px; width: 20px;"></div>`, 'ChatGPT', "{% static 'images/gpt.svg' %}");
         if (model == 'gpt-3.5-turbo') {
