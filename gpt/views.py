@@ -56,7 +56,7 @@ def gpt(request: HttpRequest):
         if history.get(user.id):
             history[user.id].append(msg)
         else:
-            history[user.id] = collections.deque([msg], maxlen=8)
+            history[user.id] = collections.deque([msg], maxlen=80)
 
         try:
             response = openai.ChatCompletion.create(model=input['model'],messages=list(history[user.id]))

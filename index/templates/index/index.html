@@ -1,0 +1,87 @@
+{% load static %}
+<style>
+    .select-notice {
+        margin: 12px 0 12px 0;
+		padding: 6px 0 6px 0;
+		border-radius: 4px;
+		border: 1px solid gray;
+        height: 50px;
+    }
+    .Noel {
+        border-radius: 4px;
+    }
+    .Long-Hub {
+        border-radius: 4px;
+    }
+    .image-container {
+        border-radius: 4px;
+        padding: 15px 0 12px 0;
+    }
+    .container {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+    }
+    
+</style>
+<link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" />
+<script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+<body style="height: 100%; ">
+    <div class="mdui-container container">
+        <div class="mdui-row mdui-valign select-notice mdui-shadow-2">
+            <div class="mdui-container">
+                <div style="text-align: center;font-size: 20px; font-weight: bold;">Neol以及Long-Hub目前运行正常</div>
+            </div>
+        </div>
+        <div class="mdui-row">
+            <div class="mdui-col-sm-12 mdui-col-md-6 mdui-shadow-1 image-container" style="background-color: rgba(234, 183, 183, 0.155);">
+                <div class="mdui-row">
+                    <div class="mdui-container">
+                        <div style="text-align: center;font-size: 20px; font-weight: bold;">Noel</div>
+                    </div>
+                </div>
+                <div class="mdui-typo">
+                    <hr/>
+                </div>
+                <br/>
+                <a href="{% url 'user:login'%}">
+                    <img src="{% static 'images/loginback.jpg'%}" alt="Noel" style="width: 100%;height: 500px; object-fit: cover;" class="Noel mdui-hoverable" >
+                </a>
+                <div class="mdui-typo">
+                    <hr/>
+                </div>
+                <br/>
+                <div class="mdui-row">
+                    <div class="mdui-container">
+                        <div style="font-size: 14px; font-weight: bold;">Noel是一个兼具不同功能的网站，在这里，您可以发布帖子、博客、实时与网站用户聊天，甚至是免费使用ChatGpt-3.5或者申请使用ChatGpt-4，注册账号，登陆，然后开始使用原生OpenAI的Gpt接口搭建的问候问答页面，并享受单个账号最多四轮的历史记录</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mdui-col-sm-12 mdui-col-md-6 mdui-shadow-1 image-container" style="background-color: rgba(133, 131, 131, 0.132);">
+                <div class="mdui-row">
+                    <div class="mdui-container">
+                        <div style="text-align: center;font-size: 20px; font-weight: bold;">Long-Hub</div>
+                    </div>
+                </div>
+                <div class="mdui-typo">
+                    <hr/>
+                </div>
+                <br/>
+                <a href="http://43.248.191.29:14238/">
+                    <img src="{% static 'images/indexlonghub.png'%}" alt="Long-Hub" style="width: 100%;height: 500px; object-fit: cover;" class="Long-Hub mdui-hoverable">
+                </a>
+                <div class="mdui-typo">
+                    <hr/>
+                </div>
+                <br/>
+                <div class="mdui-row">
+                    <div class="mdui-container">
+                        <div style="font-size: 14px; font-weight: bold;">Long-Hub是一款支持自由上传龙图的网站，这里汇聚了大量龙图，他们已经由贡献者们亲手打上标签和文字内容，您也可以咨询网站的开发者来获取Long-Hub的API使用权来使您的机器人(如QQ机器人)接入Long-Hub从而方便的使用Temlpate功能</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
