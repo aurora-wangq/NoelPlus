@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -94,11 +95,11 @@ ASGI_APPLICATION = 'noel-refactored.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 配置数据库类型
-        'NAME': 'noelplus',  # 数据库名字
-        'USER': 'root',  # 数据库用户
-        'PASSWORD': 'MyNewPass4!',  # 数据库密码
-        'HOST': '43.138.26.229',  # 数据库地址
-        'PORT': '3306',  # 数据库端口
+        'NAME': config('DB_NAME'),  # 数据库名字
+        'USER': config('DB_USER'),  # 数据库用户
+        'PASSWORD': config('DB_PASSWORD'),  # 数据库密码
+        'HOST': config('DB_HOST'),  # 数据库地址
+        'PORT': config('DB_PORT'),  # 数据库端口
         'OPTIONS': {'charset': 'utf8mb4'},
     }
 }

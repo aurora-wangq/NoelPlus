@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import markdown
 import time
+from decouple import config
 import collections
 
 def mdconv(text: str):
@@ -43,7 +44,7 @@ def gpt(request: HttpRequest):
         return render(request, 'gpt/gpt.html', context)
     elif request.method == 'POST':
         input = request.POST
-        openai.api_key = ""
+        openai.api_key = config('OPENAI_APIKEY')
         openai.api_base = "https://api.ai-yyds.com/v1"
 
         if input['model'] == 'gpt-4' and 'gpt4_permitted' not in [ x.name for x in user.groups.all() ]:

@@ -8,3 +8,5 @@ django
 pymysql
 Pillow
 pymdown-extensions
+python-decouple
+openai
