@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import openai
+from openai import OpenAI
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse, HttpResponseForbidden, HttpRequest, HttpResponseServerError
 import json
@@ -8,8 +9,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import markdown
 import time
-from decouple import config
+from decouple import config, UndefinedValueError
 import collections
+
+try:
+    client = OpenAI(
+        api_key=config('OPENAI_APIKEY'),
+        base_url='https://api.ai-yyds.com/v1'
+    )
+except UndefinedValueError:
+    client = None
 
 def mdconv(text: str):
     md = markdown.Markdown(
@@ -43,9 +52,10 @@ def gpt(request: HttpRequest):
     if request.method == 'GET':
         return render(request, 'gpt/gpt.html', context)
     elif request.method == 'POST':
+        if client == None:
+            return HttpResponseServerError('OpenAI API Key not found')
+        
         input = request.POST
-        openai.api_key = config('OPENAI_APIKEY')
-        openai.api_base = "https://api.ai-yyds.com/v1"
 
         if input['model'] == 'gpt-4' and 'gpt4_permitted' not in [ x.name for x in user.groups.all() ]:
             return HttpResponseForbidden('您无权访问GPT4')
@@ -60,11 +70,14 @@ def gpt(request: HttpRequest):
             history[user.id] = collections.deque([msg], maxlen=80)
 
         try:
-            response = openai.ChatCompletion.create(model=input['model'],messages=list(history[user.id]))
+            completion = client.chat.completions.create(
+                model=input['model'],
+                messages=list(history[user.id])
+            )
         except Exception as e:
             return HttpResponseServerError(str(e))
         
-        reply = response["choices"][0]["message"]["content"]
+        reply = completion.choices[0].message.content
 
         history[user.id].append({
             'role': 'assistant',
