@@ -48,7 +48,7 @@ def edit_post(request):
         x1 = 512
         y1 = int(y * x1 / x)
         path1 = './thumbnail/' + str(new_post.images)
-        out = im.resize((x1, y1), Image.ANTIALIAS)
+        out = im.resize((x1, y1), Image.Resampling.BICUBIC)
         out.save(path1)
         return redirect('zone:home')
 
